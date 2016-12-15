@@ -16,6 +16,11 @@ import java.util.List;
 public class FlowsReducer implements Reducer {
 
     @Override
+    public Class<? extends Action>[] getAcceptedActions() {
+        return new Class[]{FollowFlowsAction.class};
+    }
+
+    @Override
     public ProcessInstance reduce(ProcessInstance state, Action action) throws ExecutionException {
         if (!(action instanceof FollowFlowsAction)) {
             return state;

@@ -18,6 +18,21 @@ public class InterceptorEventsReducer implements Reducer {
     }
 
     @Override
+    public Class<? extends Action>[] getAcceptedActions() {
+        return new Class[]{
+                FireOnElementInterceptorsAction.class,
+                FireOnStartInterceptorsAction.class,
+                FireOnSuspendInterceptorsAction.class,
+                FireOnResumeInterceptorsAction.class,
+                FireOnFinishInterceptorsAction.class,
+                FireOnFailureInterceptorsAction.class,
+                FireOnUnhandledErrorAction.class,
+                FireOnScopeCreatedInterceptorsAction.class,
+                FireOnScopeDestroyedInterceptorsAction.class
+        };
+    }
+
+    @Override
     public ProcessInstance reduce(ProcessInstance state, Action action) throws ExecutionException {
         if (action instanceof FireOnElementInterceptorsAction) {
             FireOnElementInterceptorsAction a = (FireOnElementInterceptorsAction) action;

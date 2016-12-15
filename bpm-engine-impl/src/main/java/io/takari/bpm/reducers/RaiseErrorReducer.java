@@ -18,6 +18,11 @@ public class RaiseErrorReducer implements Reducer {
     }
 
     @Override
+    public Class<? extends Action>[] getAcceptedActions() {
+        return new Class[]{RaiseErrorAction.class};
+    }
+
+    @Override
     public ProcessInstance reduce(ProcessInstance state, Action action) throws ExecutionException {
         if (!(action instanceof RaiseErrorAction)) {
             return state;

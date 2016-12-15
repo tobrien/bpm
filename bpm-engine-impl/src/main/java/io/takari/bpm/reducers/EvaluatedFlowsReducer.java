@@ -33,6 +33,11 @@ public class EvaluatedFlowsReducer implements Reducer {
     }
 
     @Override
+    public Class<? extends Action>[] getAcceptedActions() {
+        return new Class[]{EvaluateAndFollowFlowsAction.class};
+    }
+
+    @Override
     public ProcessInstance reduce(ProcessInstance state, Action action) throws ExecutionException {
         if (!(action instanceof EvaluateAndFollowFlowsAction)) {
             return state;

@@ -28,6 +28,11 @@ public class CallActivityReducer implements Reducer {
     }
 
     @Override
+    public Class<? extends Action>[] getAcceptedActions() {
+        return new Class[]{FindAndCallActivityAction.class};
+    }
+
+    @Override
     public ProcessInstance reduce(ProcessInstance state, Action action) throws ExecutionException {
         if (!(action instanceof FindAndCallActivityAction)) {
             return state;

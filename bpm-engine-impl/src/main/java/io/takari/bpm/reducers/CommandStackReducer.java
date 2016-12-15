@@ -12,6 +12,14 @@ public class CommandStackReducer implements Reducer {
     private static final Logger log = LoggerFactory.getLogger(CommandStackReducer.class);
 
     @Override
+    public Class<? extends Action>[] getAcceptedActions() {
+        return new Class[]{
+                PushCommandAction.class,
+                PopCommandAction.class
+        };
+    }
+
+    @Override
     public ProcessInstance reduce(ProcessInstance state, Action action) {
         if (action instanceof PushCommandAction) {
             PushCommandAction a = (PushCommandAction) action;

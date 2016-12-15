@@ -13,7 +13,7 @@
     <packaging>takari-jar</packaging>
 
     <properties>
-        <jmh.version>1.12</jmh.version>
+        <jmh.version>1.17.2</jmh.version>
         <uberjar.name>benchmarks</uberjar.name>
         <takari.annotationProcessing>proc</takari.annotationProcessing>
         <takari.compilerId>javac</takari.compilerId>

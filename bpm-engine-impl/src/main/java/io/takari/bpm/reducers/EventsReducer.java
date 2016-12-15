@@ -45,6 +45,11 @@ public class EventsReducer implements Reducer {
     }
 
     @Override
+    public Class<? extends Action>[] getAcceptedActions() {
+        return new Class[]{CreateEventAction.class};
+    }
+
+    @Override
     public ProcessInstance reduce(ProcessInstance state, Action action) throws ExecutionException {
         if (!(action instanceof CreateEventAction)) {
             return state;

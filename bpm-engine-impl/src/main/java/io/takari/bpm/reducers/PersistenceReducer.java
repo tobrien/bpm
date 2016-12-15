@@ -18,6 +18,14 @@ public class PersistenceReducer implements Reducer {
     }
 
     @Override
+    public Class<? extends Action>[] getAcceptedActions() {
+        return new Class[]{
+                SuspendAndPersistAction.class,
+                RemoveInstanceAction.class
+        };
+    }
+
+    @Override
     public ProcessInstance reduce(ProcessInstance state, Action action) throws ExecutionException {
         if (action instanceof SuspendAndPersistAction) {
             // TODO split into two actions?

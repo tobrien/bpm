@@ -17,6 +17,17 @@ public class VariablesReducer implements Reducer {
     }
 
     @Override
+    public Class<? extends Action>[] getAcceptedActions() {
+        return new Class[]{
+                SetVariableAction.class,
+                UnsetVariableAction.class,
+                SetVariablesAction.class,
+                MergeVariablesAction.class,
+                MakeSubProcessVariablesAction.class
+        };
+    }
+
+    @Override
     public ProcessInstance reduce(ProcessInstance state, Action action) throws ExecutionException {
         if (action instanceof SetVariableAction) {
             SetVariableAction a = (SetVariableAction) action;

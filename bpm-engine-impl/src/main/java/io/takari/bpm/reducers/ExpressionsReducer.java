@@ -39,6 +39,11 @@ public class ExpressionsReducer implements Reducer {
     }
 
     @Override
+    public Class<? extends Action>[] getAcceptedActions() {
+        return new Class[]{EvalExpressionAction.class};
+    }
+
+    @Override
     public ProcessInstance reduce(ProcessInstance state, Action action) throws ExecutionException {
         if (!(action instanceof EvalExpressionAction)) {
             return state;
@@ -87,7 +92,7 @@ public class ExpressionsReducer implements Reducer {
     private ProcessInstance applyVariablesChanges(ProcessInstance state, ExecutionContextImpl ctx) {
         List<Action> actions = ctx.toActions();
         if (actions == null || actions.isEmpty()) {
-            return  state;
+            return state;
         }
 
         Command cmd = new PerformActionsCommand(actions);

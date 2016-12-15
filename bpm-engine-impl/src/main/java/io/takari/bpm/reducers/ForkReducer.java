@@ -35,6 +35,14 @@ public class ForkReducer implements Reducer {
     }
 
     @Override
+    public Class[] getAcceptedActions() {
+        return new Class[]{
+                ParallelForkAction.class,
+                InclusiveForkAction.class
+        };
+    }
+
+    @Override
     public ProcessInstance reduce(ProcessInstance state, Action action) throws ExecutionException {
         if (action instanceof ParallelForkAction) {
             ParallelForkAction a = (ParallelForkAction) action;
