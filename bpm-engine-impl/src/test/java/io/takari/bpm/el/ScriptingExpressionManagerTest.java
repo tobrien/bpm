@@ -2,11 +2,13 @@ package io.takari.bpm.el;
 
 import io.takari.bpm.api.ExecutionContext;
 import io.takari.bpm.task.KeyAwareServiceTaskRegistry;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
+@Ignore
 public class ScriptingExpressionManagerTest {
 
     @Test

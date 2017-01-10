@@ -1,63 +1,56 @@
 package io.takari.bpm.examples.async;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
 import io.takari.bpm.EngineBuilder;
 import io.takari.bpm.ProcessDefinitionProvider;
 import io.takari.bpm.api.Engine;
 import io.takari.bpm.api.ExecutionContext;
 import io.takari.bpm.api.ExecutionException;
 import io.takari.bpm.api.JavaDelegate;
-import io.takari.bpm.model.EndEvent;
-import io.takari.bpm.model.ExpressionType;
-import io.takari.bpm.model.InclusiveGateway;
-import io.takari.bpm.model.IntermediateCatchEvent;
-import io.takari.bpm.model.ProcessDefinition;
-import io.takari.bpm.model.SequenceFlow;
-import io.takari.bpm.model.ServiceTask;
-import io.takari.bpm.model.StartEvent;
+import io.takari.bpm.model.*;
 import io.takari.bpm.task.ServiceTaskRegistry;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 public class Main {
-    
+
     private static final String DEFINITION_ID = "myProcess";
 
     public static void main(String[] args) throws Exception {
         TaskExecutor executor = new TaskExecutorImpl();
         ServiceTaskRegistryImpl taskRegistry = new ServiceTaskRegistryImpl(executor);
-        
+
         Engine engine = new EngineBuilder()
                 .withDefinitionProvider(new ProcessDefinitionProviderImpl())
                 .withTaskRegistry(taskRegistry)
                 .build();
-        
+
         taskRegistry.setEngine(engine);
-        
+
         // gentlemen, start your engines
-        
+
         String key = "abc";
         engine.start(key, DEFINITION_ID, null);
-        
+
         Thread.sleep(10000);
-        
+
         // we don't care about stopping correctly
         System.exit(0);
     }
-    
+
     /**
      * Provider for out process definition. Here you could use an external
      * storage, convert from other formats, etc.
-     * 
+     * <p>
      * We will define the process like this:
-     *
-     *  start --> gw1 --> t1 --> ev1 --> gw2 --> end
-     *               \                  /
-     *                --> t2 --> ev2 -->
-     *
+     * <p>
+     * start --> gw1 --> t1 --> ev1 --> gw2 --> end
+     * \                  /
+     * --> t2 --> ev2 -->
+     * <p>
      * In the real-world usage there should be an event based gateway on
      * each taskName to handle timeouts and other errors.
      */
@@ -65,31 +58,31 @@ public class Main {
 
         @Override
         public ProcessDefinition getById(String id) throws ExecutionException {
-            
+
             return new ProcessDefinition(DEFINITION_ID, Arrays.asList(
                     new StartEvent("start"),
                     new SequenceFlow("f1", "start", "gw1"),
                     new InclusiveGateway("gw1"),
 
-                        new SequenceFlow("f2", "gw1", "t1"),
-                        new ServiceTask("t1", ExpressionType.DELEGATE, "${taskA}"),
-                        new SequenceFlow("f3", "t1", "ev1"),
-                        new IntermediateCatchEvent("ev1", "taskA"),
-                        new SequenceFlow("f4", "ev1", "gw2"),
+                    new SequenceFlow("f2", "gw1", "t1"),
+                    new ServiceTask("t1", ExpressionType.DELEGATE, "${taskA}"),
+                    new SequenceFlow("f3", "t1", "ev1"),
+                    new IntermediateCatchEvent("ev1", "taskA"),
+                    new SequenceFlow("f4", "ev1", "gw2"),
 
-                        new SequenceFlow("f5", "gw1", "t2"),
-                        new ServiceTask("t2", ExpressionType.DELEGATE, "${taskB}"),
-                        new SequenceFlow("f6", "t2", "ev2"),
-                        new IntermediateCatchEvent("ev2", "taskB"),
-                        new SequenceFlow("f7", "ev2", "gw2"),
+                    new SequenceFlow("f5", "gw1", "t2"),
+                    new ServiceTask("t2", ExpressionType.DELEGATE, "${taskB}"),
+                    new SequenceFlow("f6", "t2", "ev2"),
+                    new IntermediateCatchEvent("ev2", "taskB"),
+                    new SequenceFlow("f7", "ev2", "gw2"),
 
-                new InclusiveGateway("gw2"),
-                new SequenceFlow("f8", "gw2", "end"),
-                new EndEvent("end")
+                    new InclusiveGateway("gw2"),
+                    new SequenceFlow("f8", "gw2", "end"),
+                    new EndEvent("end")
             ));
         }
     }
-    
+
     /**
      * Our custom service tasks registry. Instead of executing "real" tasks,
      * it will return proxies which send a taskName to the task executor.
@@ -106,7 +99,7 @@ public class Main {
         public void setEngine(Engine engine) {
             this.engine = engine;
         }
-        
+
         @Override
         public Object getByKey(final String key) {
             return new JavaDelegate() {
@@ -114,68 +107,74 @@ public class Main {
                 public void execute(final ExecutionContext ctx) throws Exception {
                     final String processKey = (String) ctx.getVariable(ExecutionContext.PROCESS_BUSINESS_KEY);
                     final String eventName = key;
-                    
-                    executor.submit(key, () -> {
-                        try {
-                            // TODO: optimistic locking. There could be a case
-                            // when we get an event notification before
-                            // finishing the main execution
-                            engine.resume(processKey, eventName, null);
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
+
+                    executor.submit(key, new TaskCallback() {
+                        @Override
+                        public void onCompletion() {
+                            try {
+                                // TODO: optimistic locking. There could be a case
+                                // when we get an event notification before
+                                // finishing the main execution
+                                engine.resume(processKey, eventName, null);
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
                 }
             };
         }
     }
-    
+
     /**
      * Our custom task executor. It could be a distributed task executor or
      * a local fork/join pool or whatever you like.
-     * 
+     * <p>
      * Receives taskNames to start a task and sends notification on a task
      * completion.
-     * 
+     * <p>
      * A simple callback is used to notify for the task completion. In real
      * world, it could be replaced with selectors, promises, etc.
      */
     public interface TaskExecutor {
-        
+
         void submit(String taskName, TaskCallback callback);
     }
-    
+
     public static final class TaskExecutorImpl implements TaskExecutor {
-        
+
         private final Executor executor = Executors.newCachedThreadPool();
         private final Map<String, Runnable> tasks = new HashMap<>();
-        
+
         public TaskExecutorImpl() {
             tasks.put("taskA", new LongTask("TaskA", 5000));
             tasks.put("taskB", new LongTask("TaskB", 3000));
         }
-        
+
         @Override
         public void submit(String taskName, final TaskCallback callback) {
             final Runnable r = tasks.get(taskName);
-            
-            executor.execute(() -> {
-                r.run();
-                callback.onCompletion();
+
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    r.run();
+                    callback.onCompletion();
+                }
             });
         }
     }
-    
+
     public interface TaskCallback {
-        
+
         void onCompletion();
     }
-    
+
     /**
      * Example of a long-running task.
      */
     public static final class LongTask implements Runnable {
-        
+
         private final String name;
         private final long workAmount;
 

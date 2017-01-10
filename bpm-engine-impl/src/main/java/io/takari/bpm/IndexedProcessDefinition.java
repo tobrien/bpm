@@ -17,7 +17,7 @@ public class IndexedProcessDefinition extends ProcessDefinition {
     private final Map<String, List<BoundaryEvent>> boundaryEvents;
 
     public IndexedProcessDefinition(ProcessDefinition pd) {
-        super(pd.getId(), pd.getChildren(), pd.getAttributes() != null ? pd.getAttributes() : Collections.emptyMap());
+        super(pd.getId(), pd.getChildren(), pd.getAttributes() != null ? pd.getAttributes() : Collections.<String, String>emptyMap());
         setName(pd.getName());
         this.outgoingFlows = indexOutgoingFlows();
         this.boundaryEvents = indexBoundaryEvents();
@@ -85,7 +85,11 @@ public class IndexedProcessDefinition extends ProcessDefinition {
                 continue;
             }
 
-            List<BoundaryEvent> l = accumulator.computeIfAbsent(ev.getAttachedToRef(), k -> new ArrayList<>());
+            List<BoundaryEvent> l = accumulator.get(ev.getAttachedToRef());
+            if (l == null) {
+                l = new ArrayList<>();
+                accumulator.put(ev.getAttachedToRef(), l);
+            }
             l.add(ev);
         }
     }

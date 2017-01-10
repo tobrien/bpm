@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>benchmark</artifactId>
-    <packaging>takari-jar</packaging>
+    <packaging>jar</packaging>
 
     <properties>
         <jmh.version>1.12</jmh.version>

@@ -25,9 +25,9 @@ public class LoopingTest extends AbstractEngineTest {
      */
     @Test
     public void testSubprocessLooping() throws Exception {
-        int loops = 500;
-        String counterKey = "counter_" + System.currentTimeMillis();
-        String expr = "${" + counterKey + " >= " + loops + "}";
+        final int loops = 500;
+        final String counterKey = "counter_" + System.currentTimeMillis();
+        final String expr = "${" + counterKey + " >= " + loops + "}";
 
         JavaDelegate t1 = spy(new JavaDelegate() {
             @Override
@@ -91,14 +91,14 @@ public class LoopingTest extends AbstractEngineTest {
         // ---
 
         String key = randomUuid().toString();
-        Map<String, Object> args = Collections.singletonMap(evKey, 0);
+        Map<String, Object> args = Collections.<String, Object>singletonMap(evKey, 0);
         getEngine().start(key, processId, args);
 
         // ---
 
         for (int i = 0; i < loops; i++) {
             String ev = "event_" + i;
-            args = Collections.singletonMap(evKey, i + 1);
+            args = Collections.<String, Object>singletonMap(evKey, i + 1);
             getEngine().resume(key, ev, args);
         }
     }

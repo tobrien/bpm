@@ -13,7 +13,7 @@ public class ProcessDiagram implements Serializable {
     private final List<Edge> edges;
 
     public ProcessDiagram(String id) {
-        this(id, Collections.emptyList(), Collections.emptyList());
+        this(id, Collections.<Shape>emptyList(), Collections.<Edge>emptyList());
     }
 
     public ProcessDiagram(String id, List<Shape> shapes, List<Edge> edges) {

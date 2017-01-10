@@ -15,7 +15,6 @@ import io.takari.bpm.task.ServiceTaskRegistry;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.Function;
 
 public final class EngineBuilder {
 
@@ -31,10 +30,10 @@ public final class EngineBuilder {
     private PersistenceManager persistenceManager;
     private Planner planner;
     private ProcessDefinitionProvider definitionProvider;
-    private Function<ProcessDefinitionProvider, IndexedProcessDefinitionProvider> definitionProviderWrappingFn;
+//    private Function<ProcessDefinitionProvider, IndexedProcessDefinitionProvider> definitionProviderWrappingFn;
     private ServiceTaskRegistry taskRegistry;
     private UuidGenerator uuidGenerator;
-    private Function<Executor, Executor> executorWrappingFn;
+//    private Function<Executor, Executor> executorWrappingFn;
     private Configuration configuration;
 
     public EngineBuilder withDefinitionProvider(ProcessDefinitionProvider definitionProvider) {
@@ -87,20 +86,24 @@ public final class EngineBuilder {
         return this;
     }
 
+    /*
     public EngineBuilder wrapExecutorWith(Function<Executor, Executor> fn) {
         this.executorWrappingFn = fn;
         return this;
     }
+    */
 
     public EngineBuilder withConfiguration(Configuration configuration) {
         this.configuration = configuration;
         return this;
     }
 
+    /*
     public EngineBuilder wrapDefinitionProviderWith(Function<ProcessDefinitionProvider, IndexedProcessDefinitionProvider> fn) {
         this.definitionProviderWrappingFn = fn;
         return this;
     }
+    */
 
     public Engine build() {
         if (configuration == null) {
@@ -154,20 +157,20 @@ public final class EngineBuilder {
         }
 
         IndexedProcessDefinitionProvider indexedDefinitionProvider;
-        if (definitionProviderWrappingFn != null) {
-            indexedDefinitionProvider = definitionProviderWrappingFn.apply(definitionProvider);
-        } else {
+//        if (definitionProviderWrappingFn != null) {
+//            indexedDefinitionProvider = definitionProviderWrappingFn.apply(definitionProvider);
+//        } else {
             indexedDefinitionProvider = new IndexedProcessDefinitionProvider(definitionProvider);
-        }
+//        }
 
         if (executor == null) {
             executor = new DefaultExecutor(configuration, expressionManager, threadPool, interceptors,
                     indexedDefinitionProvider, uuidGenerator, eventManager, persistenceManager);
         }
 
-        if (executorWrappingFn != null) {
-            executor = executorWrappingFn.apply(executor);
-        }
+//        if (executorWrappingFn != null) {
+//            executor = executorWrappingFn.apply(executor);
+//        }
 
         return new EngineImpl(new IndexedProcessDefinitionProvider(definitionProvider),
                 eventStorage, eventManager,

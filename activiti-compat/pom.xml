@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>activiti-compat</artifactId>
-    <packaging>takari-jar</packaging>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>

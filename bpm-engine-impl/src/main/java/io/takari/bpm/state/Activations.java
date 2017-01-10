@@ -32,7 +32,8 @@ public class Activations implements Serializable {
 
     public int count(UUID scopeId, String elementId) {
         ActivationKey k = new ActivationKey(scopeId, elementId);
-        return values.getOrDefault(k, 0);
+        Integer i = values.get(k);
+        return i != null ? i : 0;
     }
 
     public Map<ActivationKey, Integer> values() {

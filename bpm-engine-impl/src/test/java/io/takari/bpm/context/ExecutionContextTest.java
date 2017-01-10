@@ -39,11 +39,17 @@ public class ExecutionContextTest {
         List<Action> ls = ctx.toActions();
         assertEquals(2, ls.size());
 
-        SetVariableAction a1 = (SetVariableAction) ls.get(0);
-        assertEquals("a", a1.getKey());
-        assertEquals(234, a1.getValue());
+        for (Action a : ls) {
+            if (a instanceof SetVariableAction) {
+                SetVariableAction a1 = (SetVariableAction) a;
+                assertEquals("a", a1.getKey());
+                assertEquals(234, a1.getValue());
+            }
 
-        UnsetVariableAction a2 = (UnsetVariableAction) ls.get(1);
-        assertEquals("b", a2.getKey());
+            if (a instanceof UnsetVariableAction) {
+                UnsetVariableAction a2 = (UnsetVariableAction) a;
+                assertEquals("b", a2.getKey());
+            }
+        }
     }
 }

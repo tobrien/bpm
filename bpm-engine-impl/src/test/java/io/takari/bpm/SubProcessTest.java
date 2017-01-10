@@ -273,8 +273,8 @@ public class SubProcessTest extends AbstractEngineTest {
      */
     @Test
     public void testSeparateContext() throws Exception {
-        String varKey = "var#" + System.currentTimeMillis();
-        String varVal = "val#" + System.currentTimeMillis();
+        final String varKey = "var#" + System.currentTimeMillis();
+        final String varVal = "val#" + System.currentTimeMillis();
 
         JavaDelegate t1 = spy(new JavaDelegate() {
             @Override
@@ -315,7 +315,7 @@ public class SubProcessTest extends AbstractEngineTest {
         // ---
 
         String key = UUID.randomUUID().toString();
-        Map<String, Object> args = Collections.singletonMap(varKey, varVal);
+        Map<String, Object> args = Collections.<String, Object>singletonMap(varKey, varVal);
         getEngine().start(key, processId, args);
 
         // ---

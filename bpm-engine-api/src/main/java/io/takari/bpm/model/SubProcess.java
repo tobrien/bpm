@@ -17,7 +17,7 @@ public class SubProcess extends ProcessDefinition {
     }
 
     public SubProcess(String id, Collection<AbstractElement> children) {
-        this(id, false, Collections.emptySet(), children);
+        this(id, false, Collections.<VariableMapping>emptySet(), children);
     }
 
     public SubProcess(String id, boolean useSeparateContext, Collection<AbstractElement> children) {

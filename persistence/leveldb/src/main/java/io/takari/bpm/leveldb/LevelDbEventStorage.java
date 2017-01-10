@@ -5,20 +5,15 @@ import io.takari.bpm.event.EventStorage;
 import io.takari.bpm.event.ExpiredEvent;
 import io.takari.bpm.leveldb.index.BusinessKeyEventIndex;
 import io.takari.bpm.leveldb.index.ExpiredEventIndex;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 import org.iq80.leveldb.DBFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.ByteBuffer;
+import java.util.*;
+
 public class LevelDbEventStorage implements EventStorage {
-    
+
     private static final Logger log = LoggerFactory.getLogger(LevelDbEventStorage.class);
 
     private final ExpiredEventIndex expiredEventLevelDbIndex;
@@ -80,10 +75,15 @@ public class LevelDbEventStorage implements EventStorage {
     @Override
     public Collection<Event> find(String processBusinessKey, String eventName) {
         Collection<Event> events = find(processBusinessKey);
-        events.removeIf(e -> !e.getName().equals(eventName));
+        for (Iterator<Event> i = events.iterator(); i.hasNext(); ) {
+            Event e = i.next();
+            if (!e.getName().equals(eventName)) {
+                i.remove();
+            }
+        }
         return events;
     }
-    
+
     @Override
     public Collection<Event> find(String processBusinessKey) {
         Collection<Event> result = new ArrayList<>();
@@ -95,7 +95,7 @@ public class LevelDbEventStorage implements EventStorage {
                 result.add(e);
             }
         }
-        
+
         return result;
     }
 
@@ -110,7 +110,7 @@ public class LevelDbEventStorage implements EventStorage {
     public List<ExpiredEvent> findNextExpiredEvent(int maxEvents) {
         return expiredEventLevelDbIndex.list(new Date(), maxEvents);
     }
-    
+
     private static byte[] marshallKey(UUID id) {
         long mostSigBits = id.getMostSignificantBits();
         long leastSigBits = id.getLeastSignificantBits();

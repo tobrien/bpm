@@ -23,7 +23,7 @@ public class ProcessDefinition extends AbstractElement {
     }
 
     public ProcessDefinition(String id, Collection<AbstractElement> children) {
-        this(id, children, Collections.emptyMap());
+        this(id, children, Collections.<String, String>emptyMap());
     }
 
     public ProcessDefinition(String id, Collection<AbstractElement> children, Map<String, String> attributes) {

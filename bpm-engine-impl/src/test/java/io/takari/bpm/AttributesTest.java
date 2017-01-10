@@ -16,9 +16,9 @@ public class AttributesTest extends AbstractEngineTest {
 
     @Test
     public void test() throws Exception {
-        String processId = "test";
-        String attrKey = "key#" + System.currentTimeMillis();
-        String attrVal = "val#" + System.currentTimeMillis();
+        final String processId = "test";
+        final String attrKey = "key#" + System.currentTimeMillis();
+        final String attrVal = "val#" + System.currentTimeMillis();
 
         JavaDelegate t1 = spy(new JavaDelegate() {
 

@@ -113,8 +113,8 @@ public class ExclusiveGatewayTest extends AbstractEngineTest {
 
     @Test
     public void testExpressionsSideEffects() throws Exception {
-        String varKey = "key#" + System.currentTimeMillis();
-        String varVal = "val#" + System.currentTimeMillis();
+        final String varKey = "key#" + System.currentTimeMillis();
+        final String varVal = "val#" + System.currentTimeMillis();
 
         JavaDelegate t1 = spy(new JavaDelegate() {
             @Override
@@ -153,7 +153,7 @@ public class ExclusiveGatewayTest extends AbstractEngineTest {
         // ---
 
         String key = UUID.randomUUID().toString();
-        getEngine().start(key, processId, Collections.singletonMap(varKey, varVal));
+        getEngine().start(key, processId, Collections.<String, Object>singletonMap(varKey, varVal));
 
         // ---
 

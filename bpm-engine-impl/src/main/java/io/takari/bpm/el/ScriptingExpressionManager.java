@@ -18,7 +18,12 @@ public class ScriptingExpressionManager implements ExpressionManager {
     private final KeyAwareServiceTaskRegistry taskRegistry;
 
     public ScriptingExpressionManager(final String engineName, KeyAwareServiceTaskRegistry taskRegistry) {
-        this.engine = ThreadLocal.withInitial(() -> new ScriptEngineManager().getEngineByName(engineName));
+        this.engine = new ThreadLocal<ScriptEngine>() {
+            @Override
+            protected ScriptEngine initialValue() {
+                return new ScriptEngineManager().getEngineByName(engineName);
+            }
+        };
         this.taskRegistry = taskRegistry;
     }
 

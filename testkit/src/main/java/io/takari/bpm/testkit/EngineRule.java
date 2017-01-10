@@ -12,6 +12,7 @@ import io.takari.bpm.leveldb.LevelDbPersistenceManager;
 import io.takari.bpm.lock.StripedLockManagerImpl;
 import io.takari.bpm.model.ProcessDefinition;
 import io.takari.bpm.xml.Parser;
+import io.takari.bpm.xml.ParserException;
 import org.iq80.leveldb.DBFactory;
 import org.iq80.leveldb.impl.Iq80DBFactory;
 import org.junit.rules.TestRule;
@@ -35,11 +36,14 @@ public class EngineRule implements TestRule {
         this.deploymentProcessor = deploymentProcessor;
     }
 
-    public EngineRule(Parser parser) {
-        this.deploymentProcessor = (in, provider) -> {
-            ProcessDefinition pd = parser.parse(in);
-            IndexedProcessDefinition ipd = new IndexedProcessDefinition(pd);
-            provider.add(ipd);
+    public EngineRule(final Parser parser) {
+        this.deploymentProcessor = new DeploymentProcessor() {
+            @Override
+            public void handle(InputStream in, TestProcessDefinitionProvider provider) throws ParserException {
+                ProcessDefinition pd = parser.parse(in);
+                IndexedProcessDefinition ipd = new IndexedProcessDefinition(pd);
+                provider.add(ipd);
+            }
         };
     }
 

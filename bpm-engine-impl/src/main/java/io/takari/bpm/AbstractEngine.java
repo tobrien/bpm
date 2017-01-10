@@ -15,12 +15,7 @@ import io.takari.bpm.state.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import static java.util.Collections.singletonList;
+import java.util.*;
 
 public abstract class AbstractEngine implements Engine {
 
@@ -158,7 +153,7 @@ public abstract class AbstractEngine implements Engine {
 
         // fire the interceptors
         // TODO move to the planner?
-        state = getExecutor().eval(state, singletonList(new FireOnResumeInterceptorsAction()));
+        state = getExecutor().eval(state, Collections.<Action>singletonList(new FireOnResumeInterceptorsAction()));
 
         // process event-to-command mappings (e.g. add next command of the flow
         // to the stack)
@@ -198,18 +193,18 @@ public abstract class AbstractEngine implements Engine {
 
         if (status == ProcessStatus.SUSPENDED) {
             if (raisedError != null) {
-                state = getExecutor().eval(state, singletonList(new FireOnUnhandledErrorAction(raisedError)));
+                state = getExecutor().eval(state, Collections.<Action>singletonList(new FireOnUnhandledErrorAction(raisedError)));
                 log.debug("runLockSafe ['{}'] -> failed with '{}'", state.getBusinessKey(), raisedError.getErrorRef(), raisedError.getCause());
             }
-            state = getExecutor().eval(state, singletonList(new FireOnSuspendInterceptorsAction()));
+            state = getExecutor().eval(state, Collections.<Action>singletonList(new FireOnSuspendInterceptorsAction()));
             log.debug("runLockSafe ['{}'] -> suspended", state.getBusinessKey());
         } else if (status == ProcessStatus.FINISHED) {
             if (raisedError != null) {
-                state = getExecutor().eval(state, singletonList(new FireOnFailureInterceptorsAction(raisedError.getErrorRef())));
+                state = getExecutor().eval(state, Collections.<Action>singletonList(new FireOnFailureInterceptorsAction(raisedError.getErrorRef())));
                 log.debug("runLockSafe ['{}'] -> failed with '{}'", state.getBusinessKey(), raisedError.getErrorRef(), raisedError.getCause());
                 handleRaisedError(getConfiguration(), state, raisedError);
             } else {
-                state = getExecutor().eval(state, singletonList(new FireOnFinishInterceptorsAction()));
+                state = getExecutor().eval(state, Collections.<Action>singletonList(new FireOnFinishInterceptorsAction()));
                 log.debug("runLockSafe ['{}'] -> done", state.getBusinessKey());
             }
         }

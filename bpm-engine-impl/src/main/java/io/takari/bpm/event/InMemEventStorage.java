@@ -93,6 +93,11 @@ public class InMemEventStorage implements EventStorage {
             return;
         }
 
-        eventsToExecute.removeIf(ee -> ee.geId().equals(e.getId()));
+        for (Iterator<ExpiredEvent> i = eventsToExecute.iterator(); i.hasNext();) {
+            ExpiredEvent ee = i.next();
+            if (ee.geId().equals(e.getId())) {
+                i.remove();
+            }
+        }
     }
 }

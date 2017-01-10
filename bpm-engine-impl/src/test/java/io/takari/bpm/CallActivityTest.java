@@ -220,8 +220,8 @@ public class CallActivityTest extends AbstractEngineTest {
         String aId = "testA";
         String bId = "testB";
 
-        String varKey = "key_" + System.currentTimeMillis();
-        Object varVal = "val_" + System.currentTimeMillis();
+        final String varKey = "key_" + System.currentTimeMillis();
+        final Object varVal = "val_" + System.currentTimeMillis();
 
         Set<VariableMapping> outs = new HashSet<>();
         outs.add(new VariableMapping(varKey, null, varKey));
@@ -756,11 +756,11 @@ public class CallActivityTest extends AbstractEngineTest {
      */
     @Test
     public void testParallelCallsWithEvents() throws Exception {
-        String argKey = "arg_" + System.currentTimeMillis();
-        Object argVal = "argVal_" + System.currentTimeMillis();
-        String outKey = "out_" + System.currentTimeMillis();
-        Object ev1Val = "ev1Val_" + System.currentTimeMillis();
-        Object ev2Val = "ev2Val_" + System.currentTimeMillis();
+        final String argKey = "arg_" + System.currentTimeMillis();
+        final Object argVal = "argVal_" + System.currentTimeMillis();
+        final String outKey = "out_" + System.currentTimeMillis();
+        final Object ev1Val = "ev1Val_" + System.currentTimeMillis();
+        final Object ev2Val = "ev2Val_" + System.currentTimeMillis();
 
         JavaDelegate t1 = spy(new JavaDelegate() {
 

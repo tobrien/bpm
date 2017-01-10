@@ -22,7 +22,7 @@ public class Events implements Serializable {
     private final PMap<UUID, PMap<UUID, EventRecord>> events;
 
     public Events() {
-        this(HashTreePMap.empty());
+        this(HashTreePMap.<UUID, PMap<UUID, EventRecord>>empty());
     }
 
     private Events(PMap<UUID, PMap<UUID, EventRecord>> events) {

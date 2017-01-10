@@ -13,7 +13,7 @@ public class Scopes implements Serializable {
     private final PMap<UUID, Scope> scopes;
 
     public Scopes() {
-        this(null, HashTreePMap.empty());
+        this(null, HashTreePMap.<UUID, Scope>empty());
     }
 
     private Scopes(UUID currentId, PMap<UUID, Scope> scopes) {

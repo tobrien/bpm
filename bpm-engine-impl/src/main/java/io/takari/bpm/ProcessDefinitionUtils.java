@@ -152,7 +152,7 @@ public final class ProcessDefinitionUtils {
 
     public static List<BoundaryEvent> findOptionalBoundaryEvents(IndexedProcessDefinition pd, String attachedToRef) throws ExecutionException {
         List<BoundaryEvent> l = pd.findOptionalBoundaryEvents(attachedToRef);
-        return l != null ? l : Collections.emptyList();
+        return l != null ? l : Collections.<BoundaryEvent>emptyList();
     }
 
     public static BoundaryEvent findBoundaryErrorEvent(IndexedProcessDefinition pd, String attachedToRef, String errorRef) throws ExecutionException {

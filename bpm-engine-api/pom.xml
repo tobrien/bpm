@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>bpm-engine-api</artifactId>
-    <packaging>takari-jar</packaging>
+    <packaging>jar</packaging>
 
     <build>
         <plugins>

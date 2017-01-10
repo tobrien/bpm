@@ -86,7 +86,7 @@ public abstract class AbstractBenchmarkState {
 
         EngineBuilder builder = new EngineBuilder()
                 .withDefinitionProvider(defs)
-                .wrapDefinitionProviderWith(CachingIndexedProcessDefinitionProvider::new)
+//                .wrapDefinitionProviderWith(CachingIndexedProcessDefinitionProvider::new)
                 .withTaskRegistry(serviceTaskRegistry)
                 .withEventManager(eventPersistenceManager)
                 .withPersistenceManager(persistenceManager)

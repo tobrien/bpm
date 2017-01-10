@@ -11,7 +11,6 @@ import io.takari.bpm.model.ServiceTask;
 import io.takari.bpm.model.StartEvent;
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Arrays;
 import java.util.UUID;
 import static org.junit.Assert.*;
@@ -85,7 +84,7 @@ public class IntermediateCatchEventTest extends AbstractEngineTest {
                 new EndEvent("end")
         )));
         
-        long t1 = Instant.now().toEpochMilli();
+        long t1 = System.currentTimeMillis();
 
         // ---
 
@@ -103,7 +102,7 @@ public class IntermediateCatchEventTest extends AbstractEngineTest {
         assertNotNull(ev);
         assertNotNull(ev.getExpiredAt());
         
-        long t2 = ev.getExpiredAt().toInstant().toEpochMilli();
+        long t2 = ev.getExpiredAt().getTime();
         
         // the event should have an expiration date plus ~30sec in the future
         // we assume a generous range of ±10sec just to be sure that no

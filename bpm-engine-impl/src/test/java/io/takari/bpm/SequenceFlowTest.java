@@ -87,8 +87,8 @@ public class SequenceFlowTest extends AbstractEngineTest {
      */
     @Test
     public void testExpressionSideEffects() throws Exception {
-        String varKey = "key#" + System.currentTimeMillis();
-        String varVal = "val#" + System.currentTimeMillis();
+        final String varKey = "key#" + System.currentTimeMillis();
+        final String varVal = "val#" + System.currentTimeMillis();
 
         ExecutionListener l1 = spy(new ExecutionListener() {
             @Override
@@ -120,7 +120,7 @@ public class SequenceFlowTest extends AbstractEngineTest {
         // ---
 
         String key = UUID.randomUUID().toString();
-        Map<String, Object> args = Collections.singletonMap(varKey, varVal);
+        Map<String, Object> args = Collections.<String, Object>singletonMap(varKey, varVal);
         getEngine().start(key, processId, args);
 
         // ---

@@ -77,7 +77,12 @@ public class ServiceTaskHandler implements ElementHandler {
             }
         }
 
-        l.sort((o1, o2) -> (int) (o1.getDuration() - o2.getDuration()));
+        Collections.sort(l, new Comparator<Timeout<Command>>() {
+            @Override
+            public int compare(Timeout<Command> o1, Timeout<Command> o2) {
+                return (int) (o1.getDuration() - o2.getDuration());
+            }
+        });
 
         return l;
     }
