@@ -294,16 +294,16 @@ public class ServiceTaskTest extends AbstractEngineTest {
      */
     @Test
     public void testInOut() throws Exception {
-        String outerKey = "outerKey_" + System.currentTimeMillis();
-        String outerVal = "outerVal_" + System.currentTimeMillis();
+        final String outerKey = "outerKey_" + System.currentTimeMillis();
+        final String outerVal = "outerVal_" + System.currentTimeMillis();
 
-        String outerKey2 = "outerKey2_" + System.currentTimeMillis();
-        String outerVal2 = "outerVal2_" + System.currentTimeMillis();
+        final String outerKey2 = "outerKey2_" + System.currentTimeMillis();
+        final String outerVal2 = "outerVal2_" + System.currentTimeMillis();
 
-        String innerKey = "innerKey_" + System.currentTimeMillis();
-        String innerVal = "innerVal_" + System.currentTimeMillis();
+        final String innerKey = "innerKey_" + System.currentTimeMillis();
+        final String innerVal = "innerVal_" + System.currentTimeMillis();
 
-        String outKey = "outKey_" + System.currentTimeMillis();
+        final String outKey = "outKey_" + System.currentTimeMillis();
 
         JavaDelegate t1 = spy(new JavaDelegate() {
 
