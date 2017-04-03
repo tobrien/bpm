@@ -13,6 +13,7 @@ A simple implementation of a BPM engine, designed to mimic Activiti's behaviour.
 - event scheduling (e.g. "timers");
 - supports Activiti's XML format (both process and visual elements);
 - supports JUEL in flow expressions, task delegates, etc;
+- form service API for creating form-based user tasks;
 - JUnit support (and easy unit testing in general).
 
 ## Supported elements:
@@ -24,10 +25,12 @@ A simple implementation of a BPM engine, designed to mimic Activiti's behaviour.
 - inclusive gateway;
 - intermediate catch event;
 - parallel gateway;
+- script task (JSR-223);
 - sequence flow;
 - service task;
 - start event;
-- subprocess.
+- subprocess;
+- user task.
 
 ## Limitations
 - tasks with TimerBoundaryEvents executed in a separate thread inside of an unbounded Executor.

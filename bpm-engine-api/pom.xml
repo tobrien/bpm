@@ -4,12 +4,20 @@
     <parent>
         <groupId>io.takari.bpm</groupId>
         <artifactId>parent</artifactId>
-        <version>0.11.1-SNAPSHOT</version>
+        <version>0.21.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>bpm-engine-api</artifactId>
     <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

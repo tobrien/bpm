@@ -53,9 +53,14 @@ public class DefaultExpressionManager implements ExpressionManager {
 
             return type.cast(v);
         } catch (Exception e) {
-            log.error("eval ['{}'] -> error", expr, e);
+            log.warn("eval ['{}'] -> error: ", expr, e.getMessage());
             throw e;
         }
+    }
+
+    @Override
+    public Object interpolate(ExecutionContext ctx, Object v) {
+        return ExpressionUtils.interpolate(this, ctx, v);
     }
 
     public static String quote(String s) {

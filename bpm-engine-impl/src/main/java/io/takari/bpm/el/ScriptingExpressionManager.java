@@ -71,4 +71,9 @@ public class ScriptingExpressionManager implements ExpressionManager {
             return super.containsKey(key) || ctx.hasVariable((String) key) || taskRegistry.containsKey((String) key);
         }
     }
+
+    @Override
+    public Object interpolate(ExecutionContext ctx, Object v) {
+        return ExpressionUtils.interpolate(this, ctx, v);
+    }
 }

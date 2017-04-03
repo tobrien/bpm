@@ -15,7 +15,10 @@ import io.takari.bpm.persistence.InMemPersistenceManager;
 import io.takari.bpm.persistence.PersistenceManager;
 import io.takari.bpm.planner.DefaultPlanner;
 import io.takari.bpm.planner.Planner;
+import io.takari.bpm.resource.ClassPathResourceResolver;
+import io.takari.bpm.resource.ResourceResolver;
 import io.takari.bpm.task.ServiceTaskRegistryImpl;
+import io.takari.bpm.task.UserTaskHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +49,8 @@ public class EngineHolder {
     private final UuidGenerator uuidGenerator;
     private final LockManager lockManager;
     private final Configuration configuration;
+    private final DelegatingUserTaskHandler userTaskHandler;
+    private final ResourceResolver resourceResolver;
 
     public EngineHolder() throws Exception {
         serviceTaskRegistry = new ServiceTaskRegistryImpl();
@@ -58,8 +63,11 @@ public class EngineHolder {
         uuidGenerator = new TestUuidGenerator();
         configuration = new Configuration();
         lockManager = new SingleLockManagerImpl();
+        userTaskHandler = new DelegatingUserTaskHandler();
+        resourceResolver = new ClassPathResourceResolver();
         executor = wrap(new DefaultExecutor(configuration, expressionManager, Executors.newCachedThreadPool(),
-                interceptorHolder, indexedProcessDefinitionProvider, uuidGenerator, eventManager, persistenceManager));
+                interceptorHolder, indexedProcessDefinitionProvider, uuidGenerator, eventManager, persistenceManager,
+                userTaskHandler, resourceResolver));
 
         engine = new AbstractEngine() {
 
@@ -151,6 +159,10 @@ public class EngineHolder {
 
     public ProcessDefinitionProvider getProcessDefinitionProvider() {
         return processDefinitionProvider;
+    }
+
+    public DelegatingUserTaskHandler getUserTaskHandler() {
+        return userTaskHandler;
     }
 
     public void deploy(ProcessDefinition pd) {

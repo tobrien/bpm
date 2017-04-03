@@ -1,10 +1,98 @@
 # Change Log
 
-## [Unreleased]
+## [0.21.1] - 2017-04-02
+
+### Changed
+
+- fix form defaults: copy existing values before calculating default field values.
+
+
+
+## [0.21.0] - 2017-03-30
+
+### Added
+
+- `FormField#allowedValue` allows to specify an allowed value for a field. The value
+can be of any (serializable) type, process using `ExpressionManager#interpolate` and
+can contain expressions.
+
+### Breaking
+
+- `FormField#valueExpr` replaced with `FormField#defaultValue`. This value will be
+processed using `ExpressionManager#interpolate` and can contain expressions.
+
+
+
+## [0.20.1] - 2017-03-27
+
+### Changed
+
+- new parent POM version;
+
+
+
+## [0.20.0] - 2017-03-26
+
+### Added
+
+- `ProcessDefinitionBuilder#script` method for adding `ScriptTask` elements;
+- new method in `ProcessDefinitionBuilder` to add user tasks.
+- support for form-based user tasks, a new `UserTask.Extension` and forms API.
+
+
+
+## [0.14.2] - 2017-03-14
+
+### Added
+
+- support for values interpolation in in/out variable mappings. Any string in source values
+(including in deeply-nested collections) can be treated as an expression and eval'ed with
+the current process context. This feature available only on the model API level for now:
+see `VariableMapping#interpolateValue`.
+
+
+
+## [0.14.1] - 2017-03-12
+
+### Added
+
+- evaluation results of `ExpressionType.SIMPLE` tasks now are stored with the
+`ServiceTask.EXPRESSION_RESULT_VAR` key in the context. This can be turned off by
+setting `Configuration#setStoreExpressionEvalResultsInContext(false)`;
+- new methods in `ProcessDefinitionBuilder` to add tasks with IN/OUT variables mapping;
+- small improvements for `ProcessDefinitionHelper#dump`.
+
+### Changed
+
+- `DefaultExpressionManager` now logs evaluation errors using `WARN` level.
+
+
+
+## [0.14.0] - 2017-03-11
+
+### Added
+
+- new element: `ScriptTask`. Allows execution of JSR-223 compatible scripts;
+- new extension point: `ResourceResolver`. Used for resolving external resources (e.g. scripts).
+
+
+
+## [0.13.0] - 2017-03-10
+
+### Added
+
+- new element: `UserTask`;
+- new extension point: `UserTaskHandler` interface to handle `UserTask` elements. Default implementation
+will simply skip those elements.
+
+
+
+## [0.12.0] - 2017-02-28
 
 ### Added
 
 - basic support for in/out variables in `ServiceTask` elements.
+- new `ProcessDefinitionBuilder`.
 
 
 

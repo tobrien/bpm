@@ -26,7 +26,26 @@ public final class ProcessDefinitionHelper {
 
     private static void dump(StringBuilder b, ProcessDefinition pd, Map<String, SourceMap> sourceMaps, int level) {
         for (AbstractElement e : pd.getChildren()) {
-            pad(b, level).append(e.getClass().getSimpleName()).append(" // ").append(e.getId()).append("\n");
+            pad(b, level).append(e.getClass().getSimpleName()).append(" [").append(e.getId()).append("]");
+
+            if (e instanceof SequenceFlow) {
+                SequenceFlow f = (SequenceFlow) e;
+                b.append(" ").append(f.getFrom()).append(" -> ").append(f.getTo());
+                if (f.getExpression() != null) {
+                    b.append(" ").append(f.getExpression());
+                }
+            } else if (e instanceof ServiceTask) {
+                ServiceTask t = (ServiceTask) e;
+                b.append(" ").append(t.getType()).append(" ").append(t.getExpression());
+                if (t.getIn() != null) {
+                    pad(b.append("\n"), level + 1).append("IN: ").append(t.getIn());
+                }
+                if (t.getOut() != null) {
+                    pad(b.append("\n"), level + 1).append("OUT: ").append(t.getOut());
+                }
+            }
+
+            b.append("\n");
 
             SourceMap sm = sourceMaps.get(e.getId());
             if (sm != null) {

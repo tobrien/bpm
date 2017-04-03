@@ -11,7 +11,11 @@ import io.takari.bpm.persistence.InMemPersistenceManager;
 import io.takari.bpm.persistence.PersistenceManager;
 import io.takari.bpm.planner.DefaultPlanner;
 import io.takari.bpm.planner.Planner;
+import io.takari.bpm.resource.ClassPathResourceResolver;
+import io.takari.bpm.resource.ResourceResolver;
+import io.takari.bpm.task.NoopUserTaskHandler;
 import io.takari.bpm.task.ServiceTaskRegistry;
+import io.takari.bpm.task.UserTaskHandler;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -34,6 +38,8 @@ public final class EngineBuilder {
     private ServiceTaskRegistry taskRegistry;
     private UuidGenerator uuidGenerator;
 //    private Function<Executor, Executor> executorWrappingFn;
+    private UserTaskHandler userTaskHandler;
+    private ResourceResolver resourceResolver;
     private Configuration configuration;
 
     public EngineBuilder withDefinitionProvider(ProcessDefinitionProvider definitionProvider) {
@@ -105,6 +111,16 @@ public final class EngineBuilder {
     }
     */
 
+    public EngineBuilder withUserTaskHandler(UserTaskHandler userTaskHandler) {
+        this.userTaskHandler = userTaskHandler;
+        return this;
+    }
+
+    public EngineBuilder withResourceResolver(ResourceResolver resourceResolver) {
+        this.resourceResolver = resourceResolver;
+        return this;
+    }
+
     public Engine build() {
         if (configuration == null) {
             configuration = new Configuration();
@@ -163,20 +179,35 @@ public final class EngineBuilder {
             indexedDefinitionProvider = new IndexedProcessDefinitionProvider(definitionProvider);
 //        }
 
+        if (userTaskHandler == null) {
+            userTaskHandler = new NoopUserTaskHandler();
+        }
+
+        if (resourceResolver == null) {
+            resourceResolver = new ClassPathResourceResolver();
+        }
+
         if (executor == null) {
             executor = new DefaultExecutor(configuration, expressionManager, threadPool, interceptors,
-                    indexedDefinitionProvider, uuidGenerator, eventManager, persistenceManager);
+                    indexedDefinitionProvider, uuidGenerator, eventManager, persistenceManager,
+                    userTaskHandler, resourceResolver);
         }
 
 //        if (executorWrappingFn != null) {
 //            executor = executorWrappingFn.apply(executor);
 //        }
 
-        return new EngineImpl(new IndexedProcessDefinitionProvider(definitionProvider),
-                eventStorage, eventManager,
-                persistenceManager, lockManager, uuidGenerator,
-                executor, planner,
-                configuration, interceptors);
+        IndexedProcessDefinitionProvider pdp = new IndexedProcessDefinitionProvider(definitionProvider);
+        return new EngineImpl(pdp,
+                eventStorage,
+                eventManager,
+                persistenceManager,
+                lockManager,
+                uuidGenerator,
+                executor,
+                planner,
+                configuration,
+                interceptors);
     }
 
     public static final class EngineImpl extends AbstractEngine {
